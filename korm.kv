@@ -1,0 +1,236 @@
+#:import Factory kivy.factory.Factory
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+
+<NiceLB@Label>:
+    font_size: '14sp'
+    color: 0, .2, .4, 1
+    size_hint: None, None
+    size: self.texture_size[0]+5, self.texture_size[1]+5
+
+<HeadLB@Label>:
+    font_size: '17sp'
+    color: 0, .2, .4, 1
+    size_hint: None, None
+    size: self.texture_size[0]+10,self.texture_size[1]+10
+    
+<BigTI@TextInput>:
+    size_hint_y: None
+    font_size: '16sp'
+    height: self.minimum_height+10
+    multiline: False
+    
+<Apply@Button>:
+    text: 'Принять'
+    font_size: '15sp'
+    background_normal: ''
+    background_color: 0, .2, .4, 1
+    size_hint: None, None
+    size: self.texture_size[0]*2.3, self.texture_size[1]*2.3
+    
+<Screen@Screen>:
+    canvas.before:
+        #Color: 
+            #rgba: .85, .66, .01, 1
+        Rectangle:
+            source: 'background.jpg'
+            pos: self.pos
+            size: self.size
+###################################################################################################
+<Root>:
+    id: rootSCRmanager
+    transition: FadeTransition()
+    Screen:
+        name: 'MP'
+
+        BoxLayout:
+            orientation: 'vertical'
+            ActionBar:
+                id: actionbar
+                ActionView:
+                    ActionPrevious:
+                        id: korm_counter
+                    ActionOverflow:
+                        mode: 'spinner'
+                        ActionButton:
+                            text: 'Настройки'
+                            on_release: app.open_settings()                        
+                        ActionButton:
+                            text: 'Инфо'
+                            on_release: 
+                                Factory.Info().open()
+                        ActionToggleButton:
+                            text: 'Онлайн'
+                            id: WorkOnline
+                            state: 'down'
+                        ActionButton:
+                            text: 'Авторизация'
+                            minimum_width: '110sp'
+                            on_release:  
+                                rootSCRmanager.current = 'LS'
+                        ActionButton:
+                            text: 'Logout'
+                            on_release: root.logout()
+            Carousel:
+                loop: True
+
+                FloatLayout:
+                    HeadLB:
+                        id: add_korm
+                        text: 'Прибавить корм'
+                        pos: self.pos[0], actionbar.pos[1]-actionbar.height*.6
+                    NiceLB:
+                        text: 'В последний раз получено:'
+                        pos_hint: {'center_x':.5}
+                        pos: self.pos[0], add_korm.pos[1]-add_korm.height*1.2
+                    BigTI:
+                        id: input_plus
+                        size_hint_x: .5
+                        pos_hint: {'center_x':.5}
+                        pos: self.pos[0], add_korm.pos[1]-add_korm.height*3
+                    Apply:
+                        pos_hint: {'center_x': .5}
+                        pos: self.pos[0], input_plus.pos[1]-input_plus.height-self.height*.5
+                        on_press: 
+                            RESPONSE = root.korm_plus(input_plus.text, WorkOnline.state == 'down')
+                            if RESPONSE != False: root.refresh_korm(); input_plus.text = ''
+
+                FloatLayout:
+                    HeadLB:
+                        id: minus_korm
+                        text: 'Отнять корм'
+                        pos: self.pos[0], actionbar.pos[1]-actionbar.height
+                    NiceLB:
+                        text: 'В последний раз потеряно:'
+                        pos_hint: {'center_x':.5}
+                        pos: self.pos[0], minus_korm.pos[1]-minus_korm.height*1.2
+                    BigTI:
+                        id: input_minus
+                        size_hint_x: .5
+                        pos_hint: {'center_x':.5}
+                        pos: self.pos[0], minus_korm.pos[1]-minus_korm.height*3
+                    Apply:
+                        pos_hint: {'center_x': .5}
+                        pos: self.pos[0], input_minus.pos[1]-input_minus.height-self.height*.5
+                        on_press: 
+                            RESPONSE = root.korm_minus(input_minus.text, WorkOnline.state == 'down')
+                            if RESPONSE != False: root.refresh_korm(); input_minus.text = ''
+
+                FloatLayout:
+                    HeadLB:
+                        id: status_managment
+                        text: 'Управление статусом'
+                        pos: self.pos[0], actionbar.pos[1]-actionbar.height
+                    TextInput:
+                        hint_text: 'Здесь будет находиться ваш статус'.decode('utf-8')
+                        id: status
+                        font_size: '14sp'
+                        size_hint: .8, None
+                        height: self.width*.8
+                        pos_hint: {'center_x':.5}
+                        pos: self.pos[0], status_managment.pos[1]-status_managment.height-self.height
+                    Apply:
+                        text: 'Получить'
+                        on_press: 
+                            RESPONSE = root.status_get()
+                            if RESPONSE != False: status.text = RESPONSE['text']
+                    Apply:
+                        text: 'Установить'
+                        pos_hint: {'right':1}
+                        on_press:
+                            if status.text == '': Factory.EmptyStatus().open()
+                            #TODO
+                        
+                BoxLayout:
+                    orientation: 'vertical'
+                    Label: #HeadLB:
+                        text: '-Продам тапок\n          -Александр Аполлонов\n\n*Здесь могла быть и ваша реклама'
+                        font_size: '17sp'
+                        color: 0, .2, .4, 1
+                        #pos_hint: {'center_x':.5, 'center_y':.5}
+                    Image:
+                        source: 'ads1.jpg'
+                        #size_hint: .4, .4
+    LoginScreen
+###################################################################################################
+<LoginScreen>:
+    name: 'LS'
+
+    HeadLB:
+        text: 'Авторизация ВК'
+        pos_hint: {'center_x':.5}
+        pos: self.pos[0], login.pos[1]+login.height*1.4
+
+    BigTI:
+        hint_text: 'Логин'.decode('utf-8') #KIVY BUG
+        id: login
+        size_hint_x: .65
+        pos_hint: {'center_x':.5,'center_y':.7}
+
+    BigTI:
+        hint_text: 'Пароль'.decode('utf-8') #KIVY BUG
+        id: pass_input
+        size_hint_x: .65
+        pos: login.pos[0], login.pos[1]-login.height*1.1
+        password: show_pass.active == False
+
+    CheckBox:
+        id: show_pass
+        size_hint: None, None
+        size: login.width*.15, login.height*.8
+        pos: login.pos[0]-self.width*.35, pass_input.pos[1]-login.height*1.1
+
+    NiceLB:
+        text: 'Показать пароль'
+        color: 0, .2, .4, 1
+        size: self.texture_size[0], show_pass.height
+        pos: show_pass.pos[0]+show_pass.width, show_pass.pos[1]
+
+    Apply:
+        text: 'Войти'
+        id: enter
+        pos_hint: {'center_x':.5}
+        pos: self.pos[0], show_pass.pos[1]-login.height*1.4
+        on_release: root.login()
+
+    Apply:
+        text: 'Пропустить'
+        pos_hint: {'center_x':.5}
+        background_color: 0, .2, .4, .5
+        pos: self.pos[0], root.height*.05
+        on_release: root.parent.current = 'MP'
+###################################################################################################
+<Info@Popup>:
+    title: 'Информация'
+    size_hint: None, None
+    size: lb.texture_size[0]*1.1, lb.texture_size[1]*2.5
+    Label: 
+        text: 'Программа создана Ershog.inc\nпри поддержке паблика evgeniyershov\n\nВерсия alpha 3.0'
+        id: lb
+
+<EmptyStatus@Popup>:
+    title: 'Пустой статус!'
+    size_hint: None, None
+    size: bl.size[0]*1.1, bl.size[1]*1.8
+    BoxLayout:
+        id: bl
+        orientation: 'vertical'
+        #size: self.minimum_size #KIVY 1.9.2
+        size_hint: None, None
+        size: lb.texture_size[0]+sl.minimum_width*1.2, lb.texture_size[1]+sl.minimum_height
+        Label: 
+            text: 'Вы пытаетесь установить пустой статус.\nПродолжить?\nНЕ РЕАЛИЗОВАНО'
+            id: lb
+            size_hint: None, None
+            size: self.texture_size
+        StackLayout:
+            id: sl
+            orientation: 'lr-bt'
+            Apply:
+                text: 'Да'
+                on_press: 
+                    #TODO 
+                    root.status_set(root.r.ids.status.text)
+                    root.dismiss()
+            Apply:
+                text: 'Нет'
+                on_press: root.dismiss()
