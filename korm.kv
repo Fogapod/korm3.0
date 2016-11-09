@@ -87,12 +87,13 @@
                         size_hint_x: .5
                         pos_hint: {'center_x':.5}
                         pos: self.pos[0], add_korm.pos[1]-add_korm.height*3
+                        on_text: self.text = root.ui_check(self.text)
                     Apply:
                         pos_hint: {'center_x': .5}
                         pos: self.pos[0], input_plus.pos[1]-input_plus.height-self.height*.5
                         on_press: 
                             RESPONSE = root.korm_plus(input_plus.text, WorkOnline.state == 'down')
-                            if RESPONSE != False: root.refresh_korm(); input_plus.text = ''
+                            if RESPONSE != False: root.refresh_korm(); input_plus.text = '' #KIVY BUG (;)
 
                 FloatLayout:
                     HeadLB:
@@ -108,12 +109,13 @@
                         size_hint_x: .5
                         pos_hint: {'center_x':.5}
                         pos: self.pos[0], minus_korm.pos[1]-minus_korm.height*3
+                        on_text: self.text = root.ui_check(self.text)
                     Apply:
                         pos_hint: {'center_x': .5}
                         pos: self.pos[0], input_minus.pos[1]-input_minus.height-self.height*.5
                         on_press: 
                             RESPONSE = root.korm_minus(input_minus.text, WorkOnline.state == 'down')
-                            if RESPONSE != False: root.refresh_korm(); input_minus.text = ''
+                            if RESPONSE != False: root.refresh_korm(); input_minus.text = '' #KIVY BUG (;)
 
                 FloatLayout:
                     HeadLB:
@@ -161,13 +163,13 @@
         pos: self.pos[0], login.pos[1]+login.height*1.4
 
     BigTI:
-        hint_text: 'Логин'.decode('utf-8') #KIVY BUG
+        hint_text: 'Логин'.decode('utf-8') #KIVY BUG (decode)
         id: login
         size_hint_x: .65
         pos_hint: {'center_x':.5,'center_y':.7}
 
     BigTI:
-        hint_text: 'Пароль'.decode('utf-8') #KIVY BUG
+        hint_text: 'Пароль'.decode('utf-8') #KIVY BUG (decode)
         id: pass_input
         size_hint_x: .65
         pos: login.pos[0], login.pos[1]-login.height*1.1

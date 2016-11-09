@@ -155,9 +155,9 @@ class Root(ScreenManager):
         try:
             korm += int(args[1])
             is_online = args[2]
-        except Exception as e:  # ValueError:
+        except ValueError:
             notification.notify(
-                title='Error!', message='Incorrect enter' + str(e))
+                title='Error!', message='Incorrect enter!')
             return False
         else:
             if is_online:
@@ -174,7 +174,7 @@ class Root(ScreenManager):
             korm -= int(args[1])
             is_online = args[2]
         except ValueError:
-            notification.notify(title='Error!', message='Incorrect enter')
+            notification.notify(title='Error!', message='Incorrect enter!')
             return False
         else:
             if is_online:
@@ -183,6 +183,17 @@ class Root(ScreenManager):
             txt = re.split(r'\n', decode('code'))
             encode('code', '%i\n%s\n%s\n' % (korm, txt[1], txt[2]))
             return str(korm)
+
+    def ui_check(self, text):
+        text = re.sub('\D', '', text)
+        limit = 100000000  # 100 000 000
+        if text != '':
+            if abs(int(text)) > limit:
+                notification.notify(
+                    title='Error!', message='Limit is exceeded!')
+                return str(limit)
+
+        return text
 
     def logout(self):
         global api
