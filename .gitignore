@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Data
+korm.txt
 # C extensions
 *.so
 
