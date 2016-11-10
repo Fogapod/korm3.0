@@ -137,6 +137,10 @@ class LoginScreen(Screen):
             notification.notify(
                 title=u'Error!', message=u'Login and password fields can\'t be empty!', timeout=3)
 
+class WallSearchScreen(Screen):
+    @vk_request_errors
+    def do_search():
+        return api.wall.get(count='50')
 
 class Root(ScreenManager):
 
