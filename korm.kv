@@ -52,6 +52,8 @@
                         id: korm_counter
                     ActionButton:
                         text: 'Стена'
+                        background_normal: ''
+                        background_color: 1, 0, 0, 1 #  WIP
                         on_press: rootSCRmanager.current = 'WSS'
                         
                     ActionOverflow:
@@ -165,6 +167,15 @@
 ###################################################################################################
 <WallSearchScreen>:
     name: 'WSS'
+    ListView:
+        size_hint: .7, .7
+        #data:
+            #ListItemButton:
+                #text: '1'
+            #ListItemButton:
+                #text: '2'
+            #ListItemButton:
+                #text: '3'
 <LoginScreen>:
     name: 'LS'
 
@@ -231,7 +242,7 @@
         size_hint: None, None
         size: lb.texture_size[0]+sl.minimum_width*1.2, lb.texture_size[1]+sl.minimum_height
         Label: 
-            text: 'Вы пытаетесь установить пустой статус.\nПродолжить?\nНЕ РЕАЛИЗОВАНО'
+            text: 'Вы пытаетесь установить пустой статус.\nПродолжить?'
             id: lb
             size_hint: None, None
             size: self.texture_size
@@ -240,6 +251,7 @@
             orientation: 'lr-bt'
             Apply:
                 text: 'Да'
+                background_color: 1, 0, 0, 1 # WIP
                 on_press: 
                     #TODO 
                     root.status_set(root.r.ids.status.text)
