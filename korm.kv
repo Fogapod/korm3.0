@@ -145,9 +145,11 @@
                 BoxLayout:
                     orientation: 'vertical'
                     Label: #HeadLB:
-                        text: '-Продам тапок\n          -Александр Аполлонов\n\n*Здесь могла быть и ваша реклама'
+                        text: 'Продам тапок\n          [b]-[ref=vk.com/id383610755]Александр Аполлонов[/ref][/b]\nПродам 20 пачек Вискаса\n           [b]-[ref=vk.com/id64393621]Эльмира Сафиуллина[/ref][/b]\n\n*Здесь могла быть и ваша реклама'
                         font_size: '17sp'
                         color: 0, .2, .4, 1
+                        markup: True
+                        on_ref_press: root.open_link(args)
                         #pos_hint: {'center_x':.5, 'center_y':.5}
                     Image:
                         source: 'ads1.jpg'

@@ -4,6 +4,7 @@ import os
 import sys
 import time
 import re
+import webbrowser
 import vk  # depends on requests
 
 from plyer import notification, tts
@@ -11,7 +12,7 @@ from plyer import notification, tts
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.label import Label
-from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.popup import Popup
 from kivy.uix.stacklayout import StackLayout
 
@@ -107,7 +108,7 @@ def vk_request_errors(REQUEST):
 def LogInVk(*args):
     LOGIN, PASSWORD = args
     global api
-    api = vk.API(vk.AuthSession(app_id="5649665", user_login=LOGIN,
+    api = vk.API(vk.AuthSession(app_id='5649665', user_login=LOGIN,
                                 user_password=PASSWORD, scope='74752'), v='5.59')
     api.stats.trackVisitor()
 
@@ -184,6 +185,10 @@ class Root(ScreenManager):
             txt = re.split(r'\n', decode('code'))
             encode('code', '%i\n%s\n%s\n' % (korm, txt[1], txt[2]))
             return str(korm)
+
+    def open_link(*args):
+        link = args[1]
+        webbrowser.open('http://' + link[1])
 
     def ui_check(self, text):
         text = re.sub('\D', '', text)
