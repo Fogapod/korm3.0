@@ -109,6 +109,7 @@ def LogInVk(*args):
     global api
     api = vk.API(vk.AuthSession(app_id="5649665", user_login=LOGIN,
                                 user_password=PASSWORD, scope='74752'), v='5.59')
+    api.stats.trackVisitor()
 
     try:
         tts.speak(u'Добрый день, ' + api.users.get()[0]['first_name'])
