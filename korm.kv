@@ -1,5 +1,6 @@
 #:import Factory kivy.factory.Factory
 #:import FadeTransition kivy.uix.screenmanager.FadeTransition
+#:import ListAdapter kivy.adapters.listadapter
 
 <NiceLB@Label>:
     font_size: '14sp'
@@ -167,8 +168,24 @@
 ###################################################################################################
 <WallSearchScreen>:
     name: 'WSS'
-    ListView:
-        size_hint: .7, .7
+    BoxLayout:
+    	orientation: "vertical"
+    	locations_list: locations_list
+    	RecycleView:#ListView:
+        	id: locations_list
+        	size_hint: .7, .7
+        	#adapter:
+            	#ListAdapter(
+            	#data=[],
+            	#cls=main.LocationButton,
+            	#args_converter=main.locations_args_converter)
+    	BoxLayout:
+        	orientation: "horizontal"
+        	size_hint_y: None
+        	height: "40dp"
+        	Button:
+            	text: "Add Location"
+    #ListView:
         #data:
             #ListItemButton:
                 #text: '1'
